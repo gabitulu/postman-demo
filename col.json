@@ -12,7 +12,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status test\", function (){",
+							"pm.test(\"GetUsers - OK\", function (){",
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
@@ -40,13 +40,13 @@
 			"response": []
 		},
 		{
-			"name": "AuthenticateUser",
+			"name": "GetErrors",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status test\", function (){",
+							"pm.test(\"GetErrors - OK\", function (){",
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
@@ -54,23 +54,11 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"aguscorvo@gmail.com\",\n    \"password\": \"123456\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:8080/api/users/auth",
+					"raw": "http://localhost:8080/api/errors",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -78,8 +66,7 @@
 					"port": "8080",
 					"path": [
 						"api",
-						"users",
-						"auth"
+						"errors"
 					]
 				}
 			},
@@ -92,8 +79,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status test\", function (){",
-							"    pm.response.to.have.status(400);",
+							"pm.test(\"CreateUser - OK\", function (){",
+							"    pm.response.to.have.status(200);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -105,7 +92,50 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"aguscorvo@gmail.com\",\n    \"password\": \"123456\",\n    \"firstName\": \"Agustina\",\n    \"lastName\": \"Corvo\"\n}",
+					"raw": "{\n    \"email\": \"prueba@gmail.com\",\n    \"password\": \"123456\",\n    \"firstName\": \"Primer\",\n    \"lastName\": \"Usuario\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateUserDuplicate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"CreateUser 101 - Usuario ya existente\", function (){",
+							"    pm.expect(pm.response.json().error).to.be.eq(101);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"prueba@gmail.com\",\n    \"password\": \"123456\",\n    \"firstName\": \"Segundo\",\n    \"lastName\": \"Usuario\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -135,8 +165,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status test\", function (){",
-							"    pm.response.to.have.status(400);",
+							"pm.test(\"AddRoles - OK\", function (){",
+							"    pm.response.to.have.status(200);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -148,7 +178,93 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"aguscorvo@gmail.com\",\n    \"password\": \"123456\",\n    \"roles\": [\n        \"rol1\",\n        \"rol2\",\n        \"rol3\"\n    ]\n}",
+					"raw": "{\n    \"email\": \"prueba@gmail.com\",\n    \"password\": \"123456\",\n    \"roles\": [\n        \"rol1\",\n        \"rol2\",\n        \"rol3\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/addRoles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"addRoles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddRolesToUserNotExists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"AddRoles 102 - Usuario inexistente\", function (){",
+							"    pm.expect(pm.response.json().error).to.be.eq(102);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"noexiste@gmail.com\",\n    \"password\": \"123456\",\n    \"roles\": [\n        \"rol1\",\n        \"rol2\",\n        \"rol3\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/addRoles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"addRoles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddRolesToUserIncPass",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"AddRoles 104 - Contrasena incorrecta\", function (){",
+							"    pm.expect(pm.response.json().error).to.be.eq(104);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"prueba@gmail.com\",\n    \"password\": \"12345\",\n    \"roles\": [\n        \"rol1\",\n        \"rol2\",\n        \"rol3\"\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -178,8 +294,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status test\", function (){",
-							"    pm.response.to.have.status(404);",
+							"pm.test(\"RemoveRoles - OK\", function (){",
+							"    pm.response.to.have.status(200);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -191,7 +307,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"aguscorvo@gmail.com\",\n    \"password\": \"123456\",\n    \"roles\": [\n        \"rol1\",\n        \"rol3\"\n    ]\n}",
+					"raw": "{\n    \"email\": \"prueba@gmail.com\",\n    \"password\": \"123456\",\n    \"roles\": [\n        \"rol1\",\n        \"rol3\"\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -215,14 +331,14 @@
 			"response": []
 		},
 		{
-			"name": "GetErrors",
+			"name": "RemoveRolesFromUserNotExists",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status test\", function (){",
-							"    pm.response.to.have.status(400);",
+							"pm.test(\"RemoveRoles 102 - Usuario inexistente\", function (){",
+							"    pm.expect(pm.response.json().error).to.be.eq(102);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -230,10 +346,19 @@
 				}
 			],
 			"request": {
-				"method": "GET",
+				"method": "PUT",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"noexiste@gmail.com\",\n    \"password\": \"123456\",\n    \"roles\": [\n        \"rol1\",\n        \"rol3\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:8080/api/errors",
+					"raw": "http://localhost:8080/api/users/removeRoles",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -241,7 +366,232 @@
 					"port": "8080",
 					"path": [
 						"api",
-						"errors"
+						"users",
+						"removeRoles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RemoveRolesFromUserIncPass",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"RemoveRoles 104 - Contrasena incorrecta\", function (){",
+							"    pm.expect(pm.response.json().error).to.be.eq(104);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"prueba@gmail.com\",\n    \"password\": \"12345\",\n    \"roles\": [\n        \"rol1\",\n        \"rol3\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/removeRoles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"removeRoles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RemoveRolesFromUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"RemoveRoles 103 - Rol inexistente\", function (){",
+							"    pm.expect(pm.response.json().error).to.be.eq(103);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"prueba@gmail.com\",\n    \"password\": \"123456\",\n    \"roles\": [\n        \"rol1\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/removeRoles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"removeRoles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AuthenticateUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Authentication: true\", function (){",
+							"    pm.expect(pm.response.json().authentication).to.be.eq(true);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"prueba@gmail.com\",\n    \"password\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AuthenticateUserErrorEmail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Authentication: false\", function (){",
+							"    pm.expect(pm.response.json().authentication).to.be.eq(false);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"noexiste@gmail.cm\",\n    \"password\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AuthenticateUserErrorPass",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Authentication: false\", function (){",
+							"    pm.expect(pm.response.json().authentication).to.be.eq(false);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"prueba@gmail.cm\",\n    \"password\": \"12345\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"auth"
 					]
 				}
 			},
