@@ -417,7 +417,7 @@
 			"response": []
 		},
 		{
-			"name": "RemoveRolesFromUser",
+			"name": "RemoveRolesFromUserRolError",
 			"event": [
 				{
 					"listen": "test",
